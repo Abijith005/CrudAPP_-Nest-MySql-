@@ -15,9 +15,12 @@ export class UserInterceptor implements HttpInterceptor {
   constructor() {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+
     const modifiedRequest=request.clone({
-      url:environment.apiUrl+request.url
+      url:environment.apiUrl+request.url,
+      withCredentials:true
     })
+  
     return next.handle(modifiedRequest);
   }
 }
