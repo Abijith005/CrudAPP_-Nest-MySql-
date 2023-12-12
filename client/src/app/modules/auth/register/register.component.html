@@ -6,25 +6,25 @@
     <hr class="mt-3" />
     <form action="" [formGroup]="registrationFrom" (ngSubmit)="onRegister()">
       <div class="mt-3">
-        <label for="username" class="block text-base mb-2">User Name</label>
+        <label for="username" [style.color]="isSubmitted&&formControl['userName'].errors?'red':''" class="block text-base mb-2">{{isSubmitted&&formControl['userName'].errors?'User Name Required':'User Name'}}</label>
         <input
-          type="text"
+          type="text" formControlName="userName"
           class="border w-full text-base px-1 py-1 focus:outline-none rounded-md focus:ring-0 focus:border-gray-600"
         />
       </div>
       <div class="mt-3">
-        <label for="Password" class="block text-base mb-2">Password</label>
+        <label [style.color]="isSubmitted&&formControl['password'].errors?'red':''" for="Password" class="block text-base mb-2">{{isSubmitted&&formControl['password'].errors?.hasOwnProperty('required')?'Password Required':(isSubmitted&&formControl['password'].errors?.hasOwnProperty('pattern')?'Password must have 4 characters':'Password')}}</label>
         <input
-          type="text"
+          type="text" formControlName="password"
           class="border w-full text-base px-1 py-1 rounded-md focus:outline-none focus:ring-0 focus:border-gray-600"
         />
       </div>
       <div class="mt-3">
-        <label for="confirmPassword" class="block text-base mb-2"
-          >Confirm Password</label
+        <label [style.color]="isSubmitted&&formControl['confirmPassword'].errors?'red':''" for="confirmPassword" class="block text-base mb-2"
+          >{{isSubmitted&&formControl['confirmPassword'].errors?.hasOwnProperty('required')?'Confirm password is required':(isSubmitted&&formControl['confirmPassword'].errors?.hasOwnProperty('notMatching')?'Password is not matching':'Confirm Password')}}</label
         >
         <input
-          type="text"
+          type="password" formControlName="confirmPassword"
           class="border w-full text-base px-1 py-1 rounded-md focus:outline-none focus:ring-0 focus:border-gray-600"
         />
       </div>

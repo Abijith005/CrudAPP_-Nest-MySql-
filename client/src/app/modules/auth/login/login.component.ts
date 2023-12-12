@@ -25,10 +25,7 @@ export class LoginComponent {
   }
 
   onLogin(){
-    this._userService.getToken().subscribe(data=>{
-      console.log(data);
-      
-    })
+
 
   }
 

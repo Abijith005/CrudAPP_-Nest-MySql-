@@ -1,37 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from 'src/app/user.service';
+import { regData } from 'src/interfaces/IuserReg';
+
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-
   // variable declaration
-  registrationFrom:FormGroup=new FormGroup({})
+  isSubmitted: boolean = false;
+  registrationFrom: FormGroup = new FormGroup({});
 
-  constructor(private _fb:FormBuilder){
-
-  }
+  constructor(private _fb: FormBuilder,
+    private _userService:UserService
+    ) {}
 
   ngOnInit(): void {
+    this.registrationFrom = this._fb.group({
+      userName: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.pattern('^.{4}$')]],
+      confirmPassword: ['', [Validators.required]],
+    });
+  }
 
-    this.registrationFrom=this._fb.group({
-      userName:['',[Validators.required]],
-      password:['',[Validators.required,Validators.pattern('')]],
-      confirmPassword:['',[Validators.required,Validators.pattern('')]]
+  public get formControl() {
+    return this.registrationFrom.controls;
+  }
+
+  onRegister() {
+    if (
+      this.formControl['password'].value !=
+      this.formControl['confirmPassword'].value
+    ) {
+      this.formControl['confirmPassword'].setErrors({ notMatching: true });
+    }
+
+    this.isSubmitted = true;
+    if (!this.registrationFrom.valid) {
+      return;
+    }
+
+    const data:regData={
+      userName:this.formControl['userName'].value,
+      password:this.formControl['password'].value,
+    }
+
+    this._userService.userRegister(data).subscribe(res=>{
+      console.log(res);
+      
     })
-    
-  }
 
-  public get formControl(){
-    return this.registrationFrom.controls
-  }
 
-  onRegister(){
-    console.log('form registered');
-    
   }
-
 }
