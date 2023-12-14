@@ -10,7 +10,7 @@ export class UserService {
   constructor(private _http:HttpClient) { }
 
   userRegister(data:regData){
-    return this._http.post<string>('/register',{data})
+    return this._http.post<string>('/auth/register',data)
   }
 
  

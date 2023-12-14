@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Req } from '@nestjs/common';
 
-@Controller()
+@Controller('crud')
 export class CrudController {
 
-    @Get('/hello')
+    @Get('/register')
     
     getUserName(){
         return ['abijith','Fabna','abifa']
     }
-    @Post()
+    @Post('/register')
     postData(@Req()req){
         console.log(req.body);
         

@@ -5,10 +5,5 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('register')
-  register(): string {
-    console.log('get token here');
-    
-    return this.appService.getHello();
-  }
+ 
 }

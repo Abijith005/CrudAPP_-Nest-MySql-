@@ -1,5 +1,5 @@
 <div class="flex justify-center items-center h-screen bg-indigo-600">
-  <div class="w-96 p-6 shadow-lg bg-white rounded-md">
+  <div class="w-96 pt-8 px-12 shadow-lg bg-white rounded-md" >
     <h1 class="text-3xl block text-center font-semibold">
       <i class="fa-solid fa-user mr-2"></i>Login
     </h1>
@@ -9,6 +9,13 @@
         <label for="username" [style.color]="isSubmitted&&formControl['userName'].errors?'red':''" class="block text-base mb-2">{{isSubmitted&&formControl['userName'].errors?'User Name Required':'User Name'}}</label>
         <input
           type="text" formControlName="userName"
+          class="border w-full text-base px-1 py-1 focus:outline-none rounded-md focus:ring-0 focus:border-gray-600"
+        />
+      </div>
+      <div class="mt-3">
+        <label for="email" [style.color]="isSubmitted&&formControl['email'].errors?'red':''" class="block text-base mb-2">{{isSubmitted&&formControl['email'].errors?.hasOwnProperty('required')?'Email Required':(isSubmitted&&formControl['email'].errors?.hasOwnProperty('pattern')?'Invalid Email':'Email')}}</label>
+        <input
+          type="email" formControlName="email"
           class="border w-full text-base px-1 py-1 focus:outline-none rounded-md focus:ring-0 focus:border-gray-600"
         />
       </div>
@@ -38,7 +45,7 @@
       </div>
     </form>
 
-    <div class="mt-5 text-center">
+    <div class="mt-5 mb-3 text-center">
       <a class="text-sm" [routerLink]="'../'"> Already have an Account ?..</a>
     </div>
   </div>
