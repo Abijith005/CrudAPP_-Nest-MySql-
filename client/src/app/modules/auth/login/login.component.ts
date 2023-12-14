@@ -1,32 +1,64 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/user.service';
+import { IuserRegData } from 'src/interfaces/IuserReg';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   // variable declarations
 
-  passwordVisibility:boolean=false
-  passwordType='password'
+  loginForm: FormGroup = new FormGroup({});
+  passwordVisibility: boolean = false;
+  passwordType = 'password';
+  isSubmitted:boolean=false
 
-  constructor(private _userService:UserService){}
+  constructor(private _userService: UserService, private _fb: FormBuilder) {}
 
+  ngOnInit(): void {
+    this.loginForm = this._fb.group({
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/),
+        ],
+      ],
+      password: ['', [Validators.required, Validators.pattern(/^.{4,}$/)]],
+    });
+  }
 
-  showPassword(){
-    this.passwordVisibility=!this.passwordVisibility
+  get formControls(){
+    return this.loginForm.controls
+  }
+
+  showPassword() {
+    this.passwordVisibility = !this.passwordVisibility;
     if (this.passwordVisibility) {
-      this.passwordType='text'
-    }else{
-      this.passwordType='password'
+      this.passwordType = 'text';
+    } else {
+      this.passwordType = 'password';
     }
   }
 
-  onLogin(){
+  onLogin() {
+    this.isSubmitted=true
+    if (!this.loginForm.valid) {
+      return
+    }
+    const data:IuserRegData={
+      email:this.formControls['email'].value,
+      password:this.formControls['password'].value
+    }
+    this._userService.userLogin(data).subscribe(res=>{
 
-
+      if (res.success) {
+        const authToken=res.headers?.get('Authorization')!
+        localStorage.setItem('authToken',authToken)
+      }
+    })
   }
-
 }

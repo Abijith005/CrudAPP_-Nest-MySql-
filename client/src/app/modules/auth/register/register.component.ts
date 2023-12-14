@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/user.service';
-import { regData } from 'src/interfaces/IuserReg';
-
+import { IuserRegData } from 'src/interfaces/IuserReg';
 
 @Component({
   selector: 'app-register',
@@ -14,17 +14,24 @@ export class RegisterComponent implements OnInit {
   isSubmitted: boolean = false;
   registrationFrom: FormGroup = new FormGroup({});
 
-  constructor(private _fb: FormBuilder,
-    private _userService:UserService
-    ) {}
+  constructor(
+    private _fb: FormBuilder,
+    private _userService: UserService,
+    private _router:Router
+  ) {}
 
   ngOnInit(): void {
     this.registrationFrom = this._fb.group({
       userName: ['', [Validators.required]],
-      email:['',[Validators.required,Validators.pattern(/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/)]],
-      password: ['', [Validators.required, Validators.pattern(/^.{4}$/)]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/),
+        ],
+      ],
+      password: ['', [Validators.required, Validators.pattern(/^.{4,}$/)]],
       confirmPassword: ['', [Validators.required]],
-
     });
   }
 
@@ -33,7 +40,6 @@ export class RegisterComponent implements OnInit {
   }
 
   onRegister() {
-    
     if (
       this.formControl['password'].value !=
       this.formControl['confirmPassword'].value
@@ -46,17 +52,17 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    const data:regData={
-      name:this.formControl['userName'].value,
-      email:this.formControl['email'].value,
-      password:this.formControl['password'].value,
-    }
+    const data: IuserRegData = {
+      name: this.formControl['userName'].value,
+      email: this.formControl['email'].value,
+      password: this.formControl['password'].value,
+    };
 
-    this._userService.userRegister(data).subscribe(res=>{
-      console.log(res);
+    this._userService.userRegister(data).subscribe((res) => {
       
-    })
-
-
+      if (res.success) {
+        this._router.navigate(['./'])
+      }
+    });
   }
 }

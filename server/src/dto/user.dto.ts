@@ -2,7 +2,7 @@
 
 export class UserDto {
   
-   name: string;
+   name?: string;
 
    email: string;
 

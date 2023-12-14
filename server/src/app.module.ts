@@ -6,10 +6,12 @@ import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './schemas/user.model';
 import { AuthModule } from './auth/auth.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @Module({
   imports: [CrudModule,
+    SharedModule,
     AuthModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
