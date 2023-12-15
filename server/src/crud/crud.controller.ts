@@ -1,17 +1,18 @@
-import { Controller, Get, Post, Req } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller('crud')
 export class CrudController {
 
-    @Get('/register')
+    @Get('/hello')
     
-    getUserName(){
-        return ['abijith','Fabna','abifa']
+    getUserName(@Res()res:Response){
+        
+        res.status(200).json({success:true})
     }
     @Post('/register')
     postData(@Req()req){
-        console.log(req.body);
-        
+
         return req.body
     }
 }

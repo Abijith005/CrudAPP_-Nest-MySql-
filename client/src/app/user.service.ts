@@ -10,13 +10,13 @@ export class UserService {
 
   constructor(private _http:HttpClient) { }
 
-  userRegister(data:IuserRegData){
-    return this._http.post<IapiResponse>('/auth/register',data)
-  }
+  // userRegister(data:IuserRegData){
+  //   return this._http.post<IapiResponse>('/auth/register',data)
+  // }
 
-  userLogin(data:IuserRegData){
-    return this._http.post<IapiResponse>('/auth/login',data)
-  }
+  // userLogin(data:IuserRegData){
+  //   return this._http.post<IapiResponse>('/auth/login',data)
+  // }
 
  
 

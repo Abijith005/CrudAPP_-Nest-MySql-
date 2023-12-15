@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/user.service';
 import { IuserRegData } from 'src/interfaces/IuserReg';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -14,9 +15,9 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({});
   passwordVisibility: boolean = false;
   passwordType = 'password';
-  isSubmitted:boolean=false
+  isSubmitted: boolean = false;
 
-  constructor(private _userService: UserService, private _fb: FormBuilder) {}
+  constructor(private _authService: AuthService, private _fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.loginForm = this._fb.group({
@@ -31,8 +32,8 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  get formControls(){
-    return this.loginForm.controls
+  get formControls() {
+    return this.loginForm.controls;
   }
 
   showPassword() {
@@ -45,20 +46,19 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    this.isSubmitted=true
+    this.isSubmitted = true;
     if (!this.loginForm.valid) {
-      return
+      return;
     }
-    const data:IuserRegData={
-      email:this.formControls['email'].value,
-      password:this.formControls['password'].value
-    }
-    this._userService.userLogin(data).subscribe(res=>{
-
+    const data: IuserRegData = {
+      email: this.formControls['email'].value,
+      password: this.formControls['password'].value,
+    };
+    this._authService.userLogin(data).subscribe((res) => {
       if (res.success) {
-        const authToken=res.headers?.get('Authorization')!
-        localStorage.setItem('authToken',authToken)
+        localStorage.setItem('accessToken', res.accessToken!); 
+        localStorage.setItem('refreshToken', res.refreshToken!); 
       }
-    })
+    });
   }
 }

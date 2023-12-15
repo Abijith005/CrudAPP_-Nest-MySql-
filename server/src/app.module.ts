@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CrudModule } from './crud/crud.module';
@@ -7,6 +7,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './schemas/user.model';
 import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
+import { AuthorizastionMiddleware } from './middlewares/authorizastion.middleware';
 
 
 @Module({
@@ -30,4 +31,10 @@ import { SharedModule } from './shared/shared.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthorizastionMiddleware).exclude(
+      {path:'/auth/(.*)',method:RequestMethod.ALL},
+    ).forRoutes('*')
+  }
+}

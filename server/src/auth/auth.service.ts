@@ -31,8 +31,6 @@ export class AuthService {
       }
     } catch (error) {
       console.error('Error', error);
-
-      throw new Error('Registration failed');
     }
   }
 
@@ -43,12 +41,13 @@ export class AuthService {
       });
       if (user) {
         const password = await bcrypt.compare(data.password,user.password);
-        console.log(password,'checkingggggggggggggggggggg');
         
         if (password) {
-          const token = await this._shareService.generateToken({id:user.id,userName:user.email});
+          const accessToken = await this._shareService.generateAccessToken({id:user.id,userName:user.email});
+          const refreshToken=await this._shareService.generateRefreshToken({id:user.id,userName:user.email})
 
-          return { success: true, message: 'Login successfull', token: token };
+
+          return { success: true, message: 'Login successfull', accessToken: accessToken,refreshToken:refreshToken };
         } else {
           return { success: false, message: 'Wrong password' };
         }
@@ -57,8 +56,6 @@ export class AuthService {
       }
     } catch (error) {
       console.error('Error', error);
-
-      throw new Error(error);
     }
   }
 }

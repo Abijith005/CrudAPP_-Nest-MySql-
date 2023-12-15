@@ -25,10 +25,7 @@ export class AuthController {
   async userLogin(@Body()data:UserDto, @Res()res:Response){
     try {
         const result=await this._authService.userLogin(data)
-        if(result.token){
-            res.setHeader('Authorization',`Bearer ${result.token}`)
-            delete result.token
-        }
+      
         res.status(200).json(result)
     } catch (error) {
         res.status(500).json({success:false,message:'Internal server error'})

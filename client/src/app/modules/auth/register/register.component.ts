@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/user.service';
 import { IuserRegData } from 'src/interfaces/IuserReg';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private _fb: FormBuilder,
-    private _userService: UserService,
+    private _authService: AuthService,
     private _router:Router
   ) {}
 
@@ -58,11 +59,18 @@ export class RegisterComponent implements OnInit {
       password: this.formControl['password'].value,
     };
 
-    this._userService.userRegister(data).subscribe((res) => {
+    this._authService.userRegister(data).subscribe((res) => {
       
       if (res.success) {
         this._router.navigate(['./'])
       }
     });
+  }
+
+  api(){
+    this._authService.apicall().subscribe(res=>{
+      console.log(res,'response for ai call');
+      
+    })
   }
 }
