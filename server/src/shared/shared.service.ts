@@ -4,18 +4,21 @@ import { tokenDto } from 'src/dto/token.dto';
 @Injectable()
 export class SharedService {
   private readonly secretKey = process.env.JWT_SECRET_KEY;
-  async generateRefreshToken(credential:tokenDto) {
+  async generateRefreshToken(credential: tokenDto) {
     try {
-      return jwt.sign(credential, this.secretKey, { expiresIn: '1d' });
+      const token = jwt.sign(credential, this.secretKey, { expiresIn: '1d' });
+      return token;
     } catch (error) {
       console.log('Error', error);
       throw new Error(error);
     }
   }
 
-  async generateAccessToken(credential:tokenDto) {
+  async generateAccessToken(credential: tokenDto) {
     try {
-      return jwt.sign(credential, this.secretKey, { expiresIn: '1m' });
+      const token = jwt.sign(credential, this.secretKey, { expiresIn: '1m' });
+
+      return token;
     } catch (error) {
       console.log('Error', error);
       throw new Error(error);

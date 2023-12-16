@@ -50,10 +50,7 @@ export class LoginComponent implements OnInit {
     if (!this.loginForm.valid) {
       return;
     }
-    const data: IuserRegData = {
-      email: this.formControls['email'].value,
-      password: this.formControls['password'].value,
-    };
+    const data=this.loginForm.getRawValue()
     this._authService.userLogin(data).subscribe((res) => {
       if (res.success) {
         localStorage.setItem('accessToken', res.accessToken!); 

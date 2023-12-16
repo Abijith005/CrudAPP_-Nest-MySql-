@@ -19,8 +19,14 @@ export class AuthService {
     return this._http.post<IapiResponse>('/auth/login',data)
   }
 
+  getNewAccessToken(){
+    console.log('123456789');
+    
+    return this._http.get<IapiResponse>('/auth/getNewAccessToken')
+  }
+
   apicall(){
-    return this._http.get<string>('/crud/hello')
+    return this._http.get<string>('/crud/hello',{observe:'response'})
   }
 
 }

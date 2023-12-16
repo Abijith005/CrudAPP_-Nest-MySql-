@@ -69,6 +69,8 @@ export class RegisterComponent implements OnInit {
 
   api(){
     this._authService.apicall().subscribe(res=>{
+      console.log('this is my res',res.headers);
+      
       console.log(res,'response for ai call');
       
     })
