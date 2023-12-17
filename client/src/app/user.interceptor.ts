@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, catchError, switchMap, tap, throwError } from 'rxjs';
+import { Observable, catchError, switchMap, throwError } from 'rxjs';
 import { environment } from 'src/environment';
 import { AuthService } from './modules/auth/auth.service';
 import { IapiResponse } from 'src/interfaces/IapiResponse';
@@ -48,8 +48,7 @@ export class UserInterceptor implements HttpInterceptor {
           error.status === 401 &&
           !this.refresh
         ) {
-          console.log('Unauthorized');
-
+          this.refresh=true
           return this._authService.getNewAccessToken().pipe(
             switchMap((res: IapiResponse) => {
               if (res.success) {
@@ -65,8 +64,8 @@ export class UserInterceptor implements HttpInterceptor {
 
                 return next.handle(modifiedRequest);
               } else {
+                
                 console.log('Error obtaining new access token');
-
                 // If obtaining a new access token fails, propagate the error
                 return throwError(error);
               }
