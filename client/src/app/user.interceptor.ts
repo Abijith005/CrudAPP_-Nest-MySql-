@@ -34,22 +34,19 @@ export class UserInterceptor implements HttpInterceptor {
       modifiedRequest = modifiedRequest.clone({
         setHeaders: {
           Authorization: `Bearer ${accessToken}`,
-          refreshToken: refreshToken,
         },
       });
     }
 
     return next.handle(modifiedRequest).pipe(
       catchError((error: any) => {
-        console.log('Error occurred', error);
-
         if (
           error instanceof HttpErrorResponse &&
           error.status === 401 &&
           !this.refresh
         ) {
           this.refresh=true
-          return this._authService.getNewAccessToken().pipe(
+          return this._authService.getNewAccessToken(refreshToken!).pipe(
             switchMap((res: IapiResponse) => {
               if (res.success) {
                 localStorage.setItem('accessToken', res.accessToken!);
@@ -58,7 +55,6 @@ export class UserInterceptor implements HttpInterceptor {
                 modifiedRequest = modifiedRequest.clone({
                   setHeaders: {
                     Authorization: `Bearer ${res.accessToken}`,
-                    refreshToken: refreshToken!,
                   },
                 });
 

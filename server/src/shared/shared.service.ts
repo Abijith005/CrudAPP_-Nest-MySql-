@@ -6,7 +6,7 @@ export class SharedService {
   private readonly secretKey = process.env.JWT_SECRET_KEY;
   async generateRefreshToken(credential: tokenDto) {
     try {
-      const token = jwt.sign(credential, this.secretKey, { expiresIn: '2m' });
+      const token = jwt.sign(credential, this.secretKey, { expiresIn: '1d' });
       return token;
     } catch (error) {
       console.log('Error', error);

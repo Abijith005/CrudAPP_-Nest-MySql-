@@ -19,10 +19,9 @@ export class AuthService {
     return this._http.post<IapiResponse>('/auth/login',data)
   }
 
-  getNewAccessToken(){
-    console.log('123456789');
+  getNewAccessToken(token:string){
     
-    return this._http.get<IapiResponse>('/auth/getNewAccessToken')
+    return this._http.get<IapiResponse>(`/auth/getNewAccessToken/${token}`)
   }
 
   apicall(){

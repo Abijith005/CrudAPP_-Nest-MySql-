@@ -53,12 +53,7 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    const data: IuserRegData = {
-      name: this.formControl['userName'].value,
-      email: this.formControl['email'].value,
-      password: this.formControl['password'].value,
-    };
-
+    const data=this.registrationFrom.getRawValue()
     this._authService.userRegister(data).subscribe((res) => {
       
       if (res.success) {
@@ -67,12 +62,4 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  api(){
-    this._authService.apicall().subscribe(res=>{
-      console.log('this is my res',res.headers);
-      
-      console.log(res,'response for ai call');
-      
-    })
-  }
 }

@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {  IapiResponse } from 'src/interfaces/IapiResponse';
-import { IuserRegData } from 'src/interfaces/IuserReg';
 
 @Injectable({
   providedIn: 'root'

@@ -37,9 +37,11 @@ export class AuthController {
     }
   }
 
-  @Get('/getNewAccessToken')
+  @Get('/getNewAccessToken/:token')
   async getAccessToken(@Req() req: Request, @Res() res: Response) {
-    const refreshToken = req.headers.refreshtoken as string;
+    const refreshToken = req.params.token
+    console.log(refreshToken,'adsfsdffdsfadsffds');
+    
     const verifyRefreshToken = this._sharedService.verifyToken(refreshToken);
     if (verifyRefreshToken) {
       const credential: tokenDto = {
