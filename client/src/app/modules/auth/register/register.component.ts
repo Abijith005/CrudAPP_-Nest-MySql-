@@ -1,29 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/user.service';
 import { IuserRegData } from 'src/interfaces/IuserReg';
 import { AuthService } from '../auth.service';
+import { NgToastService } from 'ng-angular-popup';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   // variable declaration
   isSubmitted: boolean = false;
   registrationFrom: FormGroup = new FormGroup({});
 
+  private _ngUnsubscribe$ = new Subject<void>();
+
   constructor(
     private _fb: FormBuilder,
     private _authService: AuthService,
-    private _router:Router
+    private _router: Router,
+    private _toast: NgToastService
   ) {}
 
   ngOnInit(): void {
     this.registrationFrom = this._fb.group({
-      userName: ['', [Validators.required]],
+      name: ['', [Validators.required]],
       email: [
         '',
         [
@@ -53,13 +58,30 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    const data=this.registrationFrom.getRawValue()
-    this._authService.userRegister(data).subscribe((res) => {
-      
-      if (res.success) {
-        this._router.navigate(['./'])
-      }
-    });
-  }
+    const data = this.registrationFrom.getRawValue();
 
+    this._authService
+      .userRegister(data)
+      .pipe(takeUntil(this._ngUnsubscribe$))
+      .subscribe((res) => {
+        if (res.success) {
+          this._router.navigate(['./']);
+          this._toast.success({
+            detail: 'Success',
+            summary: res.message,
+            duration: 3000,
+          });
+        } else {
+          this._toast.error({
+            detail: 'Email Rejected',
+            summary: res.message,
+            duration: 3000,
+          });
+        }
+      });
+  }
+  ngOnDestroy(): void {
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
+  }
 }

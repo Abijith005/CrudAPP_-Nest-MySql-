@@ -1,7 +1,6 @@
 
-<form class="px-10 py-1" [formGroup]="addForm" (ngSubmit)="onSubmit()">
+<form class="px-10 py-1" [formGroup]="addForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
     <div class="space-y-12">
-  
       <div class="border-b border-gray-900/10 pb-2">
         <h2 class="text-base font-semibold leading-7 text-gray-900 text-center">Book Datas</h2>
   
@@ -73,7 +72,7 @@
                 <div class="mt-0.5 flex text-sm leading-6 text-gray-600">
                   <label for="coverPhoto" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500">
                     <span>Upload a file</span>
-                    <input id="coverPhoto" formControlName="coverPhoto" name="coverPhoto" type="file" class="sr-only">
+                    <input id="coverPhoto" (change)="uploadImage($event)" formControlName="coverPhoto" name="coverPhoto"  type="file" class="sr-only">
                   </label>
                   <p class="pl-1">or drag and drop</p>
                 </div>

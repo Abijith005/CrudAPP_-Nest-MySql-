@@ -8,6 +8,8 @@ import { User } from './schemas/user.model';
 import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthorizastionMiddleware } from './middlewares/authorizastion.middleware';
+import { MulterFileUploadModule } from './multer-file-upload/multer-file-upload.module';
+import { Book } from './schemas/book.model';
 
 
 @Module({
@@ -21,12 +23,13 @@ import { AuthorizastionMiddleware } from './middlewares/authorizastion.middlewar
       username: 'abijith',
       password: 'abijiths@005',
       database: 'crud',
-      models: [User],
+      models: [User,Book],
     }),
   ConfigModule.forRoot({
     envFilePath:'.env',
     isGlobal:true
   }),
+  MulterFileUploadModule,
 ],
   controllers: [AppController],
   providers: [AppService],

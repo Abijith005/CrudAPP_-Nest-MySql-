@@ -6,9 +6,9 @@
     <hr class="mt-3" />
     <form action="" [formGroup]="registrationFrom" (ngSubmit)="onRegister()">
       <div class="mt-3">
-        <label for="username" [style.color]="isSubmitted&&formControl['userName'].errors?'red':''" class="block text-base mb-2">{{isSubmitted&&formControl['userName'].errors?'User Name Required':'User Name'}}</label>
+        <label for="name" [style.color]="isSubmitted&&formControl['name'].errors?'red':''" class="block text-base mb-2">{{isSubmitted&&formControl['name'].errors?'User Name Required':'User Name'}}</label>
         <input
-          type="text" formControlName="userName"
+          type="text" formControlName="name"
           class="border w-full text-base px-1 py-1 focus:outline-none rounded-md focus:ring-0 focus:border-gray-600"
         />
       </div>

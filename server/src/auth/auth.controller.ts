@@ -15,7 +15,7 @@ export class AuthController {
   async registerUser(
     @Body() data: UserDto,
     @Res() res: Response,
-  ): Promise<void> {
+  ) {
     try {
       const result = await this._authService.registerNewUser(data);
       res.status(200).json(result);
@@ -39,26 +39,34 @@ export class AuthController {
 
   @Get('/getNewAccessToken/:token')
   async getAccessToken(@Req() req: Request, @Res() res: Response) {
-    const refreshToken = req.params.token
-    console.log(refreshToken,'adsfsdffdsfadsffds');
-    
-    const verifyRefreshToken = this._sharedService.verifyToken(refreshToken);
-    if (verifyRefreshToken) {
-      const credential: tokenDto = {
-        id: (verifyRefreshToken as tokenDto).id,
-        userName: (verifyRefreshToken as tokenDto).userName,
-      };
+    try {
+      const refreshToken = req.params.token;
+      const verifyRefreshToken = this._sharedService.verifyToken(refreshToken);
+      console.log(verifyRefreshToken);
+      
+      if (verifyRefreshToken) {
+        console.log('verified');
+        
+        const credential: tokenDto = {
+          id: (verifyRefreshToken as tokenDto).id,
+          userName: (verifyRefreshToken as tokenDto).userName,
+        };
 
-      const newAccessToken =
-        await this._sharedService.generateAccessToken(credential);
+        const newAccessToken =
+          await this._sharedService.generateAccessToken(credential);
 
-      res.status(200).json({
-        success: true,
-        message: 'New access token generated',
-        accessToken: newAccessToken,
-      });
-    } else {
-      res.status(401).json({ success: false, message: 'Token expired' });
+        res.status(200).json({
+          success: true,
+          message: 'New access token generated',
+          accessToken: newAccessToken,
+        });
+      } else {
+        console.log('verificationfailed');
+        
+        res.status(401).json({ success: false, message: 'Token expired' });
+      }
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Internal server error' })
     }
   }
 }

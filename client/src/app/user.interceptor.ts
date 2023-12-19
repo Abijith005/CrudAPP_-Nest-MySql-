@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -10,13 +10,21 @@ import { Observable, catchError, switchMap, throwError } from 'rxjs';
 import { environment } from 'src/environment';
 import { AuthService } from './modules/auth/auth.service';
 import { IapiResponse } from 'src/interfaces/IapiResponse';
+import { NgToastService } from 'ng-angular-popup';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable()
 export class UserInterceptor implements HttpInterceptor {
   // variable declarations
   refresh = false;
 
-  constructor(private _authService: AuthService) {}
+  constructor(
+    private _authService: AuthService,
+    private _toast: NgToastService,
+    private _router: Router,
+    private _matDialog: MatDialog
+  ) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -45,9 +53,11 @@ export class UserInterceptor implements HttpInterceptor {
           error.status === 401 &&
           !this.refresh
         ) {
-          this.refresh=true
+          this.refresh = true;
           return this._authService.getNewAccessToken(refreshToken!).pipe(
             switchMap((res: IapiResponse) => {
+              console.log(res);
+
               if (res.success) {
                 localStorage.setItem('accessToken', res.accessToken!);
 
@@ -60,8 +70,6 @@ export class UserInterceptor implements HttpInterceptor {
 
                 return next.handle(modifiedRequest);
               } else {
-                
-                console.log('Error obtaining new access token');
                 // If obtaining a new access token fails, propagate the error
                 return throwError(error);
               }
@@ -70,8 +78,24 @@ export class UserInterceptor implements HttpInterceptor {
         }
 
         this.refresh = false;
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        this._matDialog.closeAll();
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          this._router.navigate(['']);
+          this._toast.error({
+            detail: 'Unauthorized',
+            summary: 'User unauthorized',
+            duration: 3000,
+          });
+        } else {
+          this._toast.error({
+            detail: 'ERROR',
+            summary: 'Internal server error',
+            duration: 3000,
+          });
+        }
+
         return throwError(error);
       })
     );

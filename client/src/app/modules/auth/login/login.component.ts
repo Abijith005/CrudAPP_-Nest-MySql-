@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit ,OnDestroy{
   // variable declarations
 
   loginForm: FormGroup = new FormGroup({});
@@ -16,9 +17,13 @@ export class LoginComponent implements OnInit {
   passwordType = 'password';
   isSubmitted: boolean = false;
 
-  constructor(private _authService: AuthService, private _fb: FormBuilder,
-    private _router:Router
-    ) {}
+  private _ngUnsubscribe$ = new Subject<void>();
+
+  constructor(
+    private _authService: AuthService,
+    private _fb: FormBuilder,
+    private _router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this._fb.group({
@@ -51,14 +56,22 @@ export class LoginComponent implements OnInit {
     if (!this.loginForm.valid) {
       return;
     }
-    const data=this.loginForm.getRawValue()
-    this._authService.userLogin(data).subscribe((res) => {
-      if (res.success) {
-        localStorage.setItem('accessToken', res.accessToken!); 
-        localStorage.setItem('refreshToken', res.refreshToken!); 
+    const data = this.loginForm.getRawValue();
+    this._authService
+      .userLogin(data)
+      .pipe(takeUntil(this._ngUnsubscribe$))
+      .subscribe((res) => {
+        if (res.success) {
+          localStorage.setItem('accessToken', res.accessToken!);
+          localStorage.setItem('refreshToken', res.refreshToken!);
 
-        this._router.navigate(['home'])
-      }
-    });
+          this._router.navigate(['home']);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this._ngUnsubscribe$.next()
+    this._ngUnsubscribe$.complete()
   }
 }

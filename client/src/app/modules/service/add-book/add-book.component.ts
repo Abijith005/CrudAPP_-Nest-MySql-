@@ -1,24 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HomeComponent } from '../home/home.component';
 import { ServiceService } from '../service.service';
+import { NgToastService } from 'ng-angular-popup';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-add-book',
   templateUrl: './add-book.component.html',
   styleUrls: ['./add-book.component.css'],
 })
-export class AddBookComponent implements OnInit {
+export class AddBookComponent implements OnInit, OnDestroy {
   // variable declarations
   private debounceTimeOut: any;
   addForm!: FormGroup;
   isSubmitted: boolean = false;
+  uploadedImgae: any;
+
+  private _ngUnsubscribe$ = new Subject<void>();
 
   constructor(
     private _fb: FormBuilder,
     private _matDialogRef: MatDialogRef<HomeComponent>,
-    private _service: ServiceService
+    private _service: ServiceService,
+    private _toast: NgToastService
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +41,7 @@ export class AddBookComponent implements OnInit {
       bookType: ['', [Validators.required]],
       language: ['', [Validators.required]],
       shortDescription: ['', Validators.required],
-      coverPhoto: ['', Validators.required],
+      coverPhoto: [null, [Validators.required]],
     });
   }
 
@@ -52,6 +58,13 @@ export class AddBookComponent implements OnInit {
         this.formControls['shortDescription'].setErrors({ limit: true });
       }
     }, 300);
+  }
+
+  uploadImage(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target && target.files && target.files.length > 0) {
+      this.uploadedImgae = target.files[0];
+    }
   }
 
   onSubmit() {
@@ -72,18 +85,40 @@ export class AddBookComponent implements OnInit {
       return;
     }
 
-    const data = this.addForm.getRawValue();
-    console.log(data);
+    const formData = new FormData();
+    formData.append('file', this.uploadedImgae);
+    formData.append('name', this.formControls['name'].value);
+    formData.append('author', this.formControls['author'].value);
+    formData.append('price', this.formControls['price'].value);
+    formData.append('bookType', this.formControls['bookType'].value);
+    formData.append('language', this.formControls['language'].value);
+    formData.append(
+      'shortDescription',
+      this.formControls['shortDescription'].value
+    );
 
-    console.log(this.formControls['coverPhoto'].value);
-    
-    
-    this._service.addBook(data).subscribe((res) => {
-      console.log(res);
-    });
+    this._service
+      .addBook(formData)
+      .pipe(takeUntil(this._ngUnsubscribe$))
+      .subscribe((res) => {
+        if (res.success) {
+          this._matDialogRef.close()
+          this._toast.success({
+            detail: 'SUCCESS',
+            summary: 'Book added successfully',
+            duration: 3000,
+          });
+        }
+      });
   }
 
   close() {
     this._matDialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    this._matDialogRef.close()
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
   }
 }
