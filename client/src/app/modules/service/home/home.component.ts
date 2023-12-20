@@ -5,6 +5,7 @@ import { ServiceService } from '../service.service';
 import { Subject, takeUntil } from 'rxjs';
 import { IbookData } from 'src/interfaces/IbookData';
 import { environment } from 'src/environment';
+import { UpdateBooksComponent } from '../update-books/update-books.component';
 
 @Component({
   selector: 'app-home',
@@ -36,6 +37,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
   }
+
+  openUpdateFrom(item:IbookData){
+    this._matDialog.open(UpdateBooksComponent,{
+      width: '500px',
+      height: '720px',
+      disableClose: true,
+      data:item
+    })
+  }
+
   ngOnDestroy(): void {
     this._ngUnsubscribe$.next();
     this._ngUnsubscribe$.complete();
