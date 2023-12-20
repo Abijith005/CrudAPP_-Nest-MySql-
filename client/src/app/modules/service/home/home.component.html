@@ -1,30 +1,89 @@
-
 <div class="min-h-full">
-    <nav class="bg-gray-800 h-24 items-center">
-      <div class=" max-w-full px-4 sm:px-6 lg:px-8">
-        <div class="relative flex h-24 items-center justify-center">
-            <div class="absolute top-2 left-0 flex-shrink-0">
-              <img class="h-20 w-20" src="../../../../assets/pictures/nest.png" >
-            </div>
-            <div class="heading">
-              <h1 class="text-3xl text-center font-bold tracking-tight text-white">Book World</h1>
-            </div>
+  <nav class="bg-gray-800 h-24 items-center">
+    <div class="max-w-full px-4 sm:px-6 lg:px-8">
+      <div class="relative flex h-24 items-center justify-center">
+        <div class="absolute top-2 left-0 flex-shrink-0">
+          <img class="h-20 w-20" src="../../../../assets/pictures/nest.png" />
+        </div>
+        <div class="heading">
+          <h1 class="text-3xl text-center font-bold tracking-tight text-white">
+            Book World
+          </h1>
         </div>
       </div>
-    </nav>
-  
-    <header class="bg-white shadow flex justify-center">
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl text-center font-bold tracking-tight text-gray-900">Books</h1>
+    </div>
+  </nav>
+
+  <header class="bg-white shadow flex justify-center">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <h1 class="text-3xl text-center font-bold tracking-tight text-gray-900">
+        Books
+      </h1>
+    </div>
+    <div class="my-auto mr-10">
+      <button
+        (click)="openAddBookForm()"
+        class="bg-orange-400 hover:bg-orange-600 transition ease-out transform hover:scale-105 duration-500 text-white font-bold py-2 px-4 rounded-lg"
+      >
+        Add Book
+      </button>
+    </div>
+  </header>
+  <main>
+    <div class="mx-auto max-w-7xl py-2 sm:px-6 lg:px-8">
+      <div class="bg-white">
+        <div
+          class="mx-auto max-w-2xl px-4 py-1 sm:px-6 sm:py-2 lg:max-w-7xl lg:px-8"
+        >
+          <div
+            class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"
+          >
+            <div
+            *ngFor="let item of bookDatas"
+
+              class="group relative hover:border-teal-100 hover:border-2 rounded-md"
+            >
+              <div class="text-center">
+                <h2 class="font-extrabold">{{ item.name }}</h2>
+              </div>
+              <div
+                class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none lg:h-80"
+              >
+                <img
+                  [src]="url+'/'+ item.coverPhoto"
+                  alt="Front of men&#039;s Basic Tee in black."
+                  class="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                />
+              </div>
+              <div class="mt-4 px-5">
+                <div class="mt-1 flex justify-between">
+                  <h3 class="text-sm text-gray-700">
+                    {{ item.bookType }}
+                  </h3>
+                  <h3 class="text-sm text-gray-700">
+                    {{ item.language }}
+                  </h3>
+                  <h3 class="text-sm text-gray-700">₹ : {{ item.price }}</h3>
+                </div>
+                <div>
+                  <h3 class="text-center break-words">
+                    {{ item.ShortDescription }}
+                  </h3>
+                </div>
+                <div class="text-center">
+                  <button
+                    class="mt-1 mb-2 hover:bg-cyan-600 transition-transform ease-out duration-300 transform hover:scale-105 rounded-md bg-cyan-500 px-4 py-2"
+                  >
+                    update
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- More products... -->
+          </div>
+        </div>
       </div>
-      <div class="my-auto mr-10">
-        <button (click)="openAddBookForm()"  class="bg-orange-400 hover:bg-orange-600 transition ease-out transform hover:scale-105 duration-500 text-white font-bold py-2 px-4 rounded-lg">Add Book</button>
-      </div>
-    </header>
-    <main>
-      <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-        <!-- Your content -->
-      </div>
-    </main>
-  </div>
-  
+    </div>
+  </main>
+</div>

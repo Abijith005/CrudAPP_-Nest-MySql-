@@ -12,7 +12,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { CrudService } from './crud.service';
 import { bookDataDto } from '../dto/bookData.dto';
-import { error } from 'console';
 
 @Controller('crud')
 export class CrudController {
@@ -35,10 +34,9 @@ export class CrudController {
       res.status(500).json({ success: false, message: 'Registration failed' });
     }
   }
-  @Get('/hello')
-  sample(@Res()res:Response){
-    console.log('api callll');
-    
-res.json({response:'done'})
+  @Get('/fetchAllBooks')
+  async fetchBookDataple(@Res() res: Response) {
+    const data=await this._crudService.getBooks()
+    res.json(data);
   }
 }

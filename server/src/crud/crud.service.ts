@@ -23,4 +23,13 @@ export class CrudService {
       console.log('Error', error);
     }
   }
+
+  async getBooks(){
+    try {
+     return await this._bookModel.findAll()
+    } catch (error) {
+      console.log('Error',error);
+      
+    }
+  }
 }

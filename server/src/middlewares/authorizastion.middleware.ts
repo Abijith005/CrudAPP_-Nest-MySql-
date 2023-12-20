@@ -6,6 +6,7 @@ import { SharedService } from '../shared/shared.service';
 export class AuthorizastionMiddleware implements NestMiddleware {
   constructor(private _sharedService: SharedService) {}
   async use(req: Request, res: Response, next: NextFunction) {
+    
     try {
       const accessToken = req.headers.authorization;
 

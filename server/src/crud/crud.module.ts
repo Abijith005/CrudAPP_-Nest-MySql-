@@ -3,7 +3,6 @@ import { CrudController } from './crud.controller';
 import { CrudService } from './crud.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import sequelize from 'sequelize';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Book } from '../schemas/book.model';
 

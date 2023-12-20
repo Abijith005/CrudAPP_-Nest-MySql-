@@ -24,8 +24,6 @@ export class AuthService {
     return this._http.get<IapiResponse>(`/auth/getNewAccessToken/${token}`)
   }
 
-  apicall(){
-    return this._http.get<string>('/crud/hello',{observe:'response'})
-  }
+
 
 }
